@@ -5,6 +5,37 @@
 
 namespace pjc {
 
+    list::~list() {
+        while(head){
+            node* temp = head;
+            head = head->next;
+            delete temp;
+        }
+    }
+
+    void list::reverse() {
+
+    }
+
+    list::list(const std::vector<double> &vec) {
+        for(unsigned long i=0; i<vec.size(); i++){
+            if(head == nullptr){
+                node* new_node = new node;
+                new_node->val = vec[i];
+                head = new_node;
+                tail = head;
+            }
+            else{
+                node* current = new node;
+                current->val = vec[i];
+                tail->next = current;
+                current->prev = tail;
+                tail = current;
+            }
+            num_elements++;
+        }
+    }
+
     void list::push_back(double elem) {
         node* new_node = new node;
         new_node->val = elem;
@@ -66,6 +97,19 @@ namespace pjc {
         if(empty()){
             throw std::out_of_range("Can't pop from empty list");
         }
+
+        if(head == tail){
+            delete head;
+            head = nullptr;
+            tail = nullptr;
+            return;
+        }
+
+        num_elements--;
+        node* new_head = head->next;
+        new_head->prev = nullptr;
+        delete head;
+        head = new_head;
     }
 
     bool list::empty() const {
@@ -76,7 +120,15 @@ namespace pjc {
         return this->tail->val;
     }
 
+    double const& list::back() const {
+        return this->tail->val;
+    }
+
     double& list::front() {
+        return this->head->val;
+    }
+
+    double const& list::front() const {
         return this->head->val;
     }
 
